@@ -12,8 +12,8 @@ load_dotenv()
 
 # パス設定
 BASE_DIR = Path(__file__).parent
-OUTPUT_DIR = BASE_DIR / "captured_videos"
-KEYFRAMES_DIR = BASE_DIR / "keyframes"
+OUTPUT_DIR = BASE_DIR.parent / "captured_videos"
+KEYFRAMES_DIR = BASE_DIR.parent / "keyframes"
 
 # キャプチャ設定
 # セグメント間隔（秒）- カメラからキャプチャした動画を区切る時間間隔

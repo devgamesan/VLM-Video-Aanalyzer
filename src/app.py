@@ -18,6 +18,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# ページ全体の設定
+st.set_page_config(
+    layout="wide",
+    page_title="リアルタイムVLM分析システム"
+)
+
 class VideoAnalysisPipeline:
     """ビデオ分析パイプライン"""
 
@@ -74,7 +80,7 @@ def render_ui(pipeline: VideoAnalysisPipeline):
     """UIレンダリング関数"""
     st.title("リアルタイムVLM分析システム")
 
-    col1, col2, dummy = st.columns([1, 1, 3], gap="small")
+    col1, col2 = st.columns([1, 1], gap="small")
 
     with col1:
         if st.button("分析開始") and not pipeline.is_running:
@@ -84,12 +90,16 @@ def render_ui(pipeline: VideoAnalysisPipeline):
         if st.button("分析停止") and pipeline.is_running:
             pipeline.stop()
             st.rerun()
-    with dummy:
-        pass
 
     if pipeline.is_running:
-        frame_placeholder = st.empty()
-        text_placeholder = st.empty()
+        # 動画と説明文を横に並べるためのレイアウト
+        video_col, description_col = st.columns([3, 2], gap="small")
+
+        with video_col:
+            frame_placeholder = st.empty()
+
+        with description_col:
+            text_placeholder = st.empty()
 
         # フレーム更新の処理
         while pipeline.is_running:
@@ -117,7 +127,7 @@ def render_ui(pipeline: VideoAnalysisPipeline):
                                (position[0]+text_size[0]+5, position[1]+5), (0, 0, 0), -1)
                 cv2.putText(rgb_frame, text, position, font, font_scale, color, thickness)
 
-                # use_container_width=True を width="stretch" に変更
+                # 動画を表示
                 frame_placeholder.image(rgb_frame, channels="RGB", width="stretch")
 
                 # 最新の説明文と時間範囲を表示
