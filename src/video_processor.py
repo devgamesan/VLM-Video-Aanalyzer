@@ -29,7 +29,7 @@ class VideoProcessor:
         self.capture_manager: Optional[VideoCaptureManager] = None
         self.vlm_thread: Optional[threading.Thread] = None
         self.is_running = False
-        self.current_description = "分析準備中..."
+        self.current_description = "\n\n分析準備中..."
         self.description_lock = threading.Lock()
         self.start_time = None
         # セグメントの開始時間（秒単位）を保持する辞書
@@ -95,7 +95,7 @@ class VideoProcessor:
                     end_min, end_sec = divmod(end_total_seconds, 60)
 
                     formatted_time_range = f"{start_min:02d}:{start_sec:02d}〜{end_min:02d}:{end_sec:02d}"
-                    description_with_time = f"（時間範囲: {formatted_time_range}）\n\n{description}"
+                    description_with_time = f"（{formatted_time_range}）\n\n{description}"
                     self.set_description(description_with_time)
                 else:
                     self.set_description(description)

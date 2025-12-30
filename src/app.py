@@ -80,7 +80,7 @@ def render_ui(pipeline: VideoAnalysisPipeline):
     """UIレンダリング関数"""
     st.title("リアルタイムVLM分析システム")
 
-    col1, col2 = st.columns([1, 1], gap="small")
+    col1, col2, _ = st.columns([1, 1, 8], gap="small")
 
     with col1:
         if st.button("分析開始") and not pipeline.is_running:
@@ -132,7 +132,7 @@ def render_ui(pipeline: VideoAnalysisPipeline):
 
                 # 最新の説明文と時間範囲を表示
                 description = pipeline.get_description()
-                text_placeholder.info(f"**VLM分析結果**\n\n{description}")
+                text_placeholder.info(f"**VLM分析結果**{description}")
 
             time.sleep(0.03) # 約30fps
 
