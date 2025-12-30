@@ -68,7 +68,7 @@ streamlit run src/app.py
 ### VLM（視覚言語モデル）設定
 - `VLM_MODEL`: 使用するVLMモデル名 - 画像分析に使用するモデルの識別子 (デフォルト: Qwen3-VL-30B-A3B-Instruct-GGUF)
 - `VLM_BASE_URL`: VLM APIのベースURL - VLMサービスへの接続先URL（例: http://localhost:22015/v1）(デフォルト: http://localhost:22015/v1)
-- `VLM_API_KEY`: VLM APIキー - VLMサービスへの認証に使用するAPIキー (デフォルト: hoge)
+- `VLM_API_KEY`: VLM APIキー - VLMサービスへの認証に使用するAPIキー
 - `VLM_IMAGE_MAX_SIZE`: 画像リサイズサイズ - VLMに渡す画像の最大サイズ（幅,高さ）(デフォルト: 800,800)
 
 ### プロンプト設定
