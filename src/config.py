@@ -26,12 +26,16 @@ TARGET_FPS = float(os.getenv("TARGET_FPS", 30.0))
 # VLM設定
 # 使用するVLMモデル名 - 画像分析に使用するモデルの識別子
 VLM_CONFIG = {
-    "model": os.getenv("VLM_MODEL", "Qwen3-VL-30B-A3B-Instruct-GGUF"),
-    # VLM APIのベースURL - VLMサービスへの接続先URL（例: http://localhost:22015/v1）
-    "base_url": os.getenv("VLM_BASE_URL", "http://localhost:22015/v1"),
+    "model": os.getenv("VLM_MODEL", "gpt-4o"),
     # VLM APIキー - VLMサービスへの認証に使用するAPIキー
-    "api_key": os.getenv("VLM_API_KEY", "hoge"),
+    "api_key": os.getenv("VLM_API_KEY", "YOUR_API_KEY"),
 }
+
+# VLM APIのベースURL - VLMサービスへの接続先URL（例: http://localhost:22015/v1）
+# 環境変数が設定されている場合のみbase_urlを設定
+vlm_base_url = os.getenv("VLM_BASE_URL")
+if vlm_base_url:
+    VLM_CONFIG["base_url"] = vlm_base_url
 
 # 画像リサイズ設定
 # 画像リサイズサイズ - VLMに渡す画像の最大サイズ（幅,高さ）
