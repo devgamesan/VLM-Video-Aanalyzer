@@ -5,7 +5,6 @@
 """
 
 from datetime import datetime
-from pathlib import Path
 
 
 def format_time(seconds: int) -> str:
@@ -34,12 +33,23 @@ def get_segment_start_time(start_time: datetime) -> str:
     return format_time(current_segment_start)
 
 
-def setup_directories() -> None:
+def setup_directories(cleanup: bool = True) -> None:
     """必要なディレクトリを作成
 
     出力ディレクトリとキーフレーム保存用ディレクトリが存在しない場合に作成する。
-    """
-    from config import OUTPUT_DIR, KEYFRAMES_DIR
+    cleanup=Trueの場合、既存のファイルを削除する。
 
-    for dir_path in [OUTPUT_DIR, KEYFRAMES_DIR]:
+    Args:
+        cleanup: 既存のファイルを削除するかどうか (デフォルト: False)
+    """
+    import config
+
+    for dir_path in [config.get_output_dir(), config.get_keyframes_dir()]:
+        if cleanup and dir_path.exists():
+            # ディレクトリ内のすべてのファイルを削除
+            for file_path in dir_path.glob("*"):
+                if file_path.is_file():
+                    file_path.unlink()
+            print(f"Cleaned up directory: {dir_path}")
+        
         dir_path.mkdir(parents=True, exist_ok=True)
