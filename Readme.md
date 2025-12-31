@@ -66,13 +66,15 @@ streamlit run src/app.py
 - `FFMPEG_KEYFRAME_COUNT`: 抽出するキーフレーム数 - 1つの動画セグメントから抽出するキーフレームの数 (デフォルト: 5)
 
 ### VLM（視覚言語モデル）設定
-- `VLM_MODEL`: 使用するVLMモデル名 - 画像分析に使用するモデルの識別子 (デフォルト: Qwen3-VL-30B-A3B-Instruct-GGUF)
-- `VLM_BASE_URL`: VLM APIのベースURL - VLMサービスへの接続先URL（例: http://localhost:22015/v1）(デフォルト: http://localhost:22015/v1)
+OpenAI互換APIを持つVLMと連携できます。
+
+- `VLM_MODEL`: 使用するVLMモデル名 - 画像分析に使用するモデルの識別子 (デフォルト: gpt-4o)
+- `VLM_BASE_URL`: VLM APIのベースURL - VLMサービスへの接続先URL（例: http://localhost:22015/v1）(デフォルト: なし)
 - `VLM_API_KEY`: VLM APIキー - VLMサービスへの認証に使用するAPIキー
 - `VLM_IMAGE_MAX_SIZE`: 画像リサイズサイズ - VLMに渡す画像の最大サイズ（幅,高さ）(デフォルト: 800,800)
 
 ### プロンプト設定
-- `VLM_PROMPT`: VLM分析プロンプト - VLMが動画内容を説明する際の指示文 (デフォルト: 動画の内容を簡潔に200文字以内説明してください。)
+- `VLM_PROMPT`: VLM分析プロンプト - VLMが動画内容を説明する際の指示文 (デフォルト: 動画の内容を簡潔に200文字以内で説明してください。)
 
 ## ディレクトリ構成
 - `src/` - アプリケーションのソースコード
@@ -84,3 +86,4 @@ streamlit run src/app.py
   - `video_capture.py` - 動画キャプチャ機能
   - `vlm_client.py` - AI視覚認識クライアント
   - `video_processor.py` - 動画処理クラス
+  - `utils.py` - ユーティリティ関数
