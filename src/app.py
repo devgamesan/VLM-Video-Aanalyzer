@@ -5,7 +5,8 @@ import logging
 from datetime import datetime
 from dotenv import load_dotenv
 
-from config import setup_directories
+
+from utils import setup_directories, format_time, get_elapsed_time, get_segment_start_time
 from video_processor import VideoProcessor
 
 # 環境変数の読み込み
@@ -58,27 +59,15 @@ class VideoAnalysisPipeline:
 
     def get_elapsed_time(self) -> str:
         """経過時間を取得"""
-        if not self.start_time:
-            return "00:00"
-
-        elapsed = datetime.now() - self.start_time
-        total_seconds = int(elapsed.total_seconds())
-        minutes, seconds = divmod(total_seconds, 60)
-        return f"{minutes:02d}:{seconds:02d}"
+        return get_elapsed_time(self.start_time)
 
     def get_segment_start_time(self) -> str:
         """セグメント開始時間を取得"""
-        if not self.start_time:
-            return "00:00"
-
-        # 現在のセグメントの開始時間（秒単位）
-        current_segment_start = int((datetime.now() - self.start_time).total_seconds())
-        minutes, seconds = divmod(current_segment_start, 60)
-        return f"{minutes:02d}:{seconds:02d}"
+        return get_segment_start_time(self.start_time)
 
 def render_ui(pipeline: VideoAnalysisPipeline):
     """UIレンダリング関数"""
-    st.title("リアルタイムVLM分析システム")
+    st.markdown("<h2 style='font-size: 28px;'>リアルタイムVLM分析システム</h2>", unsafe_allow_html=True)
 
     col1, col2, _ = st.columns([1, 1, 8], gap="small")
 

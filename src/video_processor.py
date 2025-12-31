@@ -88,8 +88,8 @@ class VideoProcessor:
                     # セグメントの長さ（秒）を定義（お使いの設定に合わせて変更してください）
 
                     # セグメントIDに基づいた正確な開始・終了時間を計算
-                    start_total_seconds = (segment_id - 1) * config.CAPTURE_INTERVAL
-                    end_total_seconds = segment_id  * config.CAPTURE_INTERVAL
+                    start_total_seconds = (segment_id - 1) * config.get_capture_interval()
+                    end_total_seconds = segment_id  * config.get_capture_interval()
 
                     start_min, start_sec = divmod(start_total_seconds, 60)
                     end_min, end_sec = divmod(end_total_seconds, 60)

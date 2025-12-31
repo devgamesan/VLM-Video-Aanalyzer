@@ -19,7 +19,7 @@ class FileManager:
         logger.info("\n生成ファイルを削除します...")
 
         # 各ディレクトリのファイルを削除
-        for dir_path in [config.OUTPUT_DIR, config.KEYFRAMES_DIR]:
+        for dir_path in [config.get_output_dir(), config.get_keyframes_dir()]:
             if dir_path.exists():
                 for item in dir_path.iterdir():
                     if item.is_file():
@@ -30,7 +30,7 @@ class FileManager:
                             logger.error(f"削除エラー ({item}): {e}")
 
         # 空のディレクトリを削除
-        for dir_path in [config.OUTPUT_DIR, config.KEYFRAMES_DIR]:
+        for dir_path in [config.get_output_dir(), config.get_keyframes_dir()]:
             if dir_path.exists() and not any(dir_path.iterdir()):
                 try:
                     dir_path.rmdir()
@@ -43,9 +43,9 @@ class FileManager:
     @staticmethod
     def get_video_files() -> List[Path]:
         """ビデオファイルのリストを取得"""
-        return list(config.OUTPUT_DIR.glob("*.mp4"))
+        return list(config.get_output_dir().glob("*.mp4"))
 
     @staticmethod
     def get_keyframe_files(segment_id: int) -> List[Path]:
         """指定したセグメントIDのキーフレームファイルを取得"""
-        return sorted(config.KEYFRAMES_DIR.glob(f"segment_{segment_id}_keyframe_*.jpg"))
+        return sorted(config.get_keyframes_dir().glob(f"segment_{segment_id}_keyframe_*.jpg"))

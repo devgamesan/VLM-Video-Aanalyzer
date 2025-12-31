@@ -16,7 +16,7 @@ class VLMClient:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.model_config = config.VLM_CONFIG
+        self.model_config = config.get_vlm_config()
         self.logger.info(self.model_config)
         self.client = ChatOpenAI(**self.model_config)
 
@@ -29,7 +29,7 @@ class VLMClient:
             tuple: (base64_string, data_url, mime_type)
         """
         # configからmax_sizeを取得
-        max_size = config.VLM_IMAGE_MAX_SIZE
+        max_size = config.get_vlm_image_max_size()
 
         img = Image.open(image_path)
         img.thumbnail(max_size, Image.Resampling.LANCZOS)
@@ -57,7 +57,7 @@ class VLMClient:
         logger = logging.getLogger(__name__)
         logger.info(f"入力画像数: {len(image_paths)}")
 
-        prompt = prompt or config.VLM_PROMPT
+        prompt = prompt or config.get_vlm_prompt()
         message_content = [{"type": "text", "text": prompt}]
 
         for image_path in image_paths:

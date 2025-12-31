@@ -31,17 +31,17 @@ class KeyframeExtractor:
 
         # 出力ディレクトリの存在確認と作成
         try:
-            config.KEYFRAMES_DIR.mkdir(parents=True, exist_ok=True)
+            config.get_keyframes_dir().mkdir(parents=True, exist_ok=True)
         except Exception as e:
             logger.error(f"キーフレーム出力ディレクトリ作成エラー: {e}")
             return []
 
-        output_pattern = str(config.KEYFRAMES_DIR / f"segment_{segment_id}_keyframe_%04d.jpg")
+        output_pattern = str(config.get_keyframes_dir() / f"segment_{segment_id}_keyframe_%04d.jpg")
 
         ffmpeg_cmd = [
             self.ffmpeg_path,
             '-i', str(video_path),
-            *config.FFMPEG_KEYFRAME_ARGS,
+            *config.get_ffmpeg_keyframe_args(),
             output_pattern
         ]
 
@@ -57,7 +57,7 @@ class KeyframeExtractor:
 
             # 抽出されたキーフレームファイルのリストを返す
             keyframe_files = sorted(
-                config.KEYFRAMES_DIR.glob(f"segment_{segment_id}_keyframe_*.jpg")
+                config.get_keyframes_dir().glob(f"segment_{segment_id}_keyframe_*.jpg")
             )
             logger.info(f"キーフレーム数: {len(keyframe_files)}")
             return keyframe_files

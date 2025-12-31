@@ -12,7 +12,7 @@ import config
 class VideoCaptureManager:
     """ビデオキャプチャの管理クラス"""
 
-    def __init__(self, camera_index: int = config.CAMERA_INDEX) -> None:
+    def __init__(self, camera_index: int = config.get_camera_index()) -> None:
         self.logger = logging.getLogger(__name__)
         self.cap = cv2.VideoCapture(camera_index)
         if not self.cap.isOpened():
@@ -31,8 +31,8 @@ class VideoCaptureManager:
             self.logger.info(f"カメラの設定FPS: {fps_setting}")
             return fps_setting
         else:
-            self.logger.info(f"デフォルトFPSを使用: {config.TARGET_FPS}")
-            return config.TARGET_FPS
+            self.logger.info(f"デフォルトFPSを使用: {config.get_target_fps()}")
+            return config.get_target_fps()
 
     def start_new_segment(self, frame) -> None:
         """新しいビデオセグメントを開始"""
@@ -40,7 +40,7 @@ class VideoCaptureManager:
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.segment_count += 1
-        self.current_output_path = config.OUTPUT_DIR / f"segment_{self.segment_count}.mp4"
+        self.current_output_path = config.get_output_dir() / f"segment_{self.segment_count}.mp4"
 
         height, width = frame.shape[:2]
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -62,7 +62,7 @@ class VideoCaptureManager:
     def should_start_new_segment(self) -> bool:
         """新しいセグメントを開始するタイミングか判定"""
         return (self.video_writer is None or
-                time.time() - self.start_time >= config.CAPTURE_INTERVAL)
+                time.time() - self.start_time >= config.get_capture_interval())
 
     def get_current_segment_info(self) -> dict:
         """現在のセグメント情報を取得"""
