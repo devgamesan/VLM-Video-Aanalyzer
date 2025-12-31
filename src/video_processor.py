@@ -34,6 +34,10 @@ class VideoProcessor:
         self.start_time = None
         # セグメントの開始時間（秒単位）を保持する辞書
         self.segment_start_times = {}
+        # 分析結果履歴
+        self.analysis_history = []
+        # 履歴更新用コールバック
+        self.history_callback = None
 
     def set_description(self, description: str):
         """説明文を設定"""
@@ -87,8 +91,6 @@ class VideoProcessor:
             if keyframes:
                 description = self.vlm_client.analyze_images(keyframes)
                 if description:
-                    # セグメントの長さ（秒）を定義（お使いの設定に合わせて変更してください）
-
                     # セグメントIDに基づいた正確な開始・終了時間を計算
                     start_total_seconds = (segment_id - 1) * config.get_capture_interval()
                     end_total_seconds = segment_id  * config.get_capture_interval()
@@ -99,8 +101,15 @@ class VideoProcessor:
                     formatted_time_range = f"{start_min:02d}:{start_sec:02d}〜{end_min:02d}:{end_sec:02d}"
                     description_with_time = f"（{formatted_time_range}）\n\n{description}"
                     self.set_description(description_with_time)
+
+                    # 履歴に追加
+                    if self.history_callback:
+                        self.history_callback(description_with_time)
                 else:
                     self.set_description(description)
+                    # 履歴に追加
+                    if self.history_callback:
+                        self.history_callback(description)
 
                 # キーフレームを使用した後、削除する
                 for keyframe in keyframes:

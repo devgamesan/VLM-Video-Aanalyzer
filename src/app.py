@@ -32,6 +32,7 @@ class VideoAnalysisPipeline:
         self.video_processor = VideoProcessor()
         self.is_running = False
         self.start_time = None
+        self.analysis_history = []
 
     def set_description(self, description: str):
         self.video_processor.set_description(description)
@@ -39,12 +40,22 @@ class VideoAnalysisPipeline:
     def get_description(self) -> str:
         return self.video_processor.get_description()
 
+    def add_to_history(self, item: str):
+        """履歴にアイテムを追加"""
+        self.analysis_history.append(item)
+
+    def get_history(self) -> list:
+        """履歴を取得"""
+        return self.analysis_history
+
     def start(self):
         """パイプラインの開始"""
         logger.info("パイプラインの開始を開始")
         setup_directories()
         self.is_running = True
         self.start_time = datetime.now()
+        # 履歴更新コールバックを設定
+        self.video_processor.history_callback = self.add_to_history
         self.video_processor.start()
 
     def stop(self):
@@ -88,7 +99,10 @@ def render_ui(pipeline: VideoAnalysisPipeline):
             frame_placeholder = st.empty()
 
         with description_col:
-            text_placeholder = st.empty()
+            with st.container(height=300):
+                text_placeholder = st.empty()
+            with st.container(height=500):
+                history_holder = st.empty()
 
         # フレーム更新の処理
         while pipeline.is_running:
@@ -122,6 +136,28 @@ def render_ui(pipeline: VideoAnalysisPipeline):
                 # 最新の説明文と時間範囲を表示
                 description = pipeline.get_description()
                 text_placeholder.info(f"**VLM分析結果**{description}")
+
+                # 履歴をテーブル形式で表示
+                history_items = pipeline.get_history()
+                if history_items:
+                    # テーブル形式で履歴を表示
+                    history_data = []
+                    for item in reversed(history_items):
+                        # 時刻と分析結果に分ける（「（時刻）」の部分を抽出）
+                        if "（" in item and "）" in item:
+                            time_part = item.split("（")[1].split("）")[0]
+                            content = item.split("）\n\n")[1] if "）\n\n" in item else item
+                        else:
+                            time_part = "時刻不明"
+                            content = item
+
+                        history_data.append({
+                            "時刻": time_part,
+                            "分析結果": content
+                        })
+
+                    # テーブルを表示
+                    history_holder.table(history_data)
 
             time.sleep(0.03) # 約30fps
 
