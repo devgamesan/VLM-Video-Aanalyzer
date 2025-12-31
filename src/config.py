@@ -34,10 +34,17 @@ def get_capture_interval() -> int:
         return DEFAULT_CAPTURE_INTERVAL
 
 
-def get_camera_index() -> int:
-    """カメラインデックスを取得"""
+def get_camera_source() -> int | str:
+    """カメラソース(インデックスまたはURL)を取得"""
+    camera_source = os.getenv("CAMERA_SOURCE", DEFAULT_CAMERA_INDEX)
+
+    # 文字列の場合はそのまま返す（URL形式の場合）
+    if isinstance(camera_source, str) and (camera_source.startswith('http://') or camera_source.startswith('https://')):
+        return camera_source
+
+    # 数値に変換可能な場合、数値として扱う
     try:
-        return int(os.getenv("CAMERA_INDEX", DEFAULT_CAMERA_INDEX))
+        return int(camera_source)
     except ValueError:
         return DEFAULT_CAMERA_INDEX
 

@@ -7,6 +7,7 @@ from io import BytesIO
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
 import logging
+import time
 
 import config
 
@@ -54,6 +55,7 @@ class VLMClient:
         if not image_paths:
             return "画像がありません"
 
+        start_time = time.time()
         logger = logging.getLogger(__name__)
         logger.info(f"入力画像数: {len(image_paths)}")
 
@@ -74,6 +76,9 @@ class VLMClient:
         try:
             message = HumanMessage(content=message_content)
             response = self.client.invoke([message])
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            logger.info(f"VLM画像分析処理時間: {elapsed_time:.2f} 秒 (画像数: {len(image_paths)})")
             return response.content
         except Exception as e:
             logger.error(f"VLM分析エラー: {e}")

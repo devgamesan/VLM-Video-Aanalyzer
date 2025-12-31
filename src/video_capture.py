@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional, Tuple
 from pathlib import Path
 import logging
+import re
 
 import config
 
@@ -12,11 +13,20 @@ import config
 class VideoCaptureManager:
     """ビデオキャプチャの管理クラス"""
 
-    def __init__(self, camera_index: int = config.get_camera_index()) -> None:
+    def __init__(self, camera_source: int | str = config.get_camera_source()) -> None:
         self.logger = logging.getLogger(__name__)
-        self.cap = cv2.VideoCapture(camera_index)
-        if not self.cap.isOpened():
-            raise RuntimeError(f"カメラを開けませんでした (index: {camera_index})")
+
+        # URL形式かどうかを判定
+        if isinstance(camera_source, str) and re.match(r'^https?://', camera_source):
+            # HTTP/RTSPストリームの場合
+            self.cap = cv2.VideoCapture(camera_source)
+            self.logger.info(f"HTTP/RTSPストリームを開始: {camera_source}")
+        else:
+            # カメラまたはローカルファイルの場合
+            self.cap = cv2.VideoCapture(camera_source)
+            if not self.cap.isOpened():
+                raise RuntimeError(f"カメラを開けませんでした (index: {camera_source})")
+            self.logger.info(f"カメラを開始: {camera_source}")
 
         self._fps = self._determine_fps()
         self.video_writer: Optional[cv2.VideoWriter] = None

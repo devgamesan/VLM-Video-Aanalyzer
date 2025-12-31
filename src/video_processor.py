@@ -74,6 +74,8 @@ class VideoProcessor:
 
     async def process_video_segment(self, segment_id: int, video_path: str):
         """ビデオセグメントを処理"""
+        import time
+        start_time = time.time()
         try:
             # パスの存在確認
             video_file = Path(video_path)
@@ -121,6 +123,10 @@ class VideoProcessor:
                 logger.error(f"ビデオファイル削除エラー ({video_file}): {e}")
         except Exception as e:
             logger.error(f"セグメント処理エラー: {e}")
+        finally:
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            logger.info(f"セグメント {segment_id} の処理時間: {elapsed_time:.2f} 秒")
 
     def start(self):
         """処理の開始"""
